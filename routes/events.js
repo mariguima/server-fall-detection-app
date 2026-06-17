@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const deviceAuth = require('../middleware/deviceAuth')
+const userAuth = require('../middleware/userAuth')
 const { db } = require('../firebase')
 const { Timestamp } = require('firebase-admin/firestore')
 

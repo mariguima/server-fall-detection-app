@@ -4,7 +4,7 @@ const deviceAuth = require('./middleware/deviceAuth')
 const userAuth = require('./middleware/userAuth')
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000
 
 app.use(express.json())
 
