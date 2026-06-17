@@ -1,3 +1,6 @@
+const env = process.env.NODE_ENV || 'development'
+require('dotenv').config({ path: `.env.${env}` })
+
 const express = require('express');
 const { getAuth, db } = require('./firebase')
 const deviceAuth = require('./middleware/deviceAuth')
