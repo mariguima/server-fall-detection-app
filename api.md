@@ -1,6 +1,6 @@
 # Fall Detection API
 
-Base URL: `http://localhost:3000` (update once deployed)
+Base URL: `https://server-fall-detection-app.onrender.com/` (update once deployed)
 
 ## Authentication
 
