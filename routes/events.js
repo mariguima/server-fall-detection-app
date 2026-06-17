@@ -22,4 +22,39 @@ router.post('/', deviceAuth, async (req, res) => {
   
 })
 
+router.patch('/:eventId/confirm', userAuth, async (req, res) => {
+  // App confirms whether the detected fall was real
+  const { eventId } = req.params
+  const { status } = req.body
+
+  if (!['fall', 'no_fall'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status value' })
+  }
+
+  try {
+    const ref = db.collection('events').doc(eventId)
+    const doc = await ref.get()
+
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Event not found' })
+    }
+
+    if (doc.data().userId !== req.user.uid) {
+      return res.status(403).json({ error: 'Unauthorized' })
+    }
+
+    if (doc.data().status !== 'warning') {
+      return res.status(409).json({ error: 'Event already confirmed' })
+    }
+
+    await ref.update({ status })
+    console.log(`Event ${eventId} confirmed as ${status} by user ${req.user.uid}`)
+
+    res.status(200).json({ eventId, status })
+
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 module.exports = router
