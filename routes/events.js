@@ -4,6 +4,7 @@ const deviceAuth = require('../middleware/deviceAuth')
 const userAuth = require('../middleware/userAuth')
 const { db } = require('../firebase')
 const { Timestamp } = require('firebase-admin/firestore')
+const sendAlertNotification = require('../utils/sendAlertNotification');
 
 router.post('/', deviceAuth, async (req, res) => {
   // ESP posts a fall event
@@ -17,6 +18,8 @@ router.post('/', deviceAuth, async (req, res) => {
     const ref = await db.collection('events').add(event)
     console.log(ref.id)
     res.status(201).json({ received: true, eventId: ref.id })
+    console.log("user id: ", userId)
+    sendAlertNotification(userId, event);
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
