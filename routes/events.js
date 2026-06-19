@@ -6,6 +6,42 @@ const { db } = require('../firebase')
 const { Timestamp } = require('firebase-admin/firestore')
 const sendAlertNotification = require('../utils/sendAlertNotification');
 
+router.get('/:eventId', userAuth, async (req, res) => {
+  const { eventId } = req.params
+  
+  try {
+      const doc = await db.collection('events').doc(eventId).get();
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'Event not found' })
+      }
+
+      if (doc.data().userId !== req.user.uid) {
+        return res.status(403).json({ error: 'Unauthorized' })
+      }
+
+      res.status(200).json({ id: doc.id, ...doc.data(), userId: undefined });
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+})
+
+router.get('/', userAuth, async (req, res) => {
+  try {
+    const snapshot = await db.collection('events')
+    .where('userId', '==', req.user.uid)
+    .get()
+    
+    const events = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      userId: undefined,
+    }))
+    res.status(200).json({ events });
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 router.post('/', deviceAuth, async (req, res) => {
   // ESP posts a fall event
   const { userId } = req.device

@@ -159,6 +159,66 @@ Accepted values: `"fall"` | `"no_fall"`
 
 ---
 
+### `GET /api/v1/events/:eventId`
+Fetch a single event by ID.
+
+**Auth:** App (JWT)
+
+**Request body:** none
+
+**Response `200`:**
+```json
+{
+  "id": "abc123",
+  "deviceId": "esp32_001",
+  "espTimestamp": "Firestore Timestamp",
+  "serverTimestamp": "Firestore Timestamp",
+  "status": "warning"
+}
+```
+> Note: `userId` is stripped from the response since it's redundant (caller already knows it's their own data).
+
+**Errors:**
+| Status | Reason |
+|---|---|
+| 401 | Missing or invalid JWT |
+| 403 | Event doesn't belong to requesting user |
+| 404 | Event not found |
+| 500 | Server/Firestore error |
+
+---
+
+### `GET /api/v1/events`
+Fetch all events belonging to the authenticated user.
+
+**Auth:** App (JWT)
+
+**Request body:** none
+
+**Response `200`:**
+```json
+{
+  "events": [
+    {
+      "id": "abc123",
+      "deviceId": "esp32_001",
+      "espTimestamp": "Firestore Timestamp",
+      "serverTimestamp": "Firestore Timestamp",
+      "status": "warning"
+    }
+  ]
+}
+```
+> Note: `userId` is stripped from each event in the response since it's redundant (caller already knows it's their own data).
+
+**Errors:**
+| Status | Reason |
+|---|---|
+| 401 | Missing or invalid JWT |
+| 500 | Server/Firestore error |
+
+---
+
 ## Data Models
 
 ### `devices/{deviceId}`
