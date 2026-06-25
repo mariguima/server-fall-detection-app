@@ -21,7 +21,7 @@ async function sendEventNotification(userId, eventData) {
 
   console.log("sending message:", message);
   try {
-    await messaging.send(message); 
+    messaging.send(message).then(() => console.log("Message sent.")).catch(err => console.log(err)); 
   } catch(err) {
     console.log("Could not send notification:", err);
   }

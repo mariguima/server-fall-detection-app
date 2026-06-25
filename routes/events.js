@@ -55,7 +55,7 @@ router.post('/', deviceAuth, async (req, res) => {
     console.log(ref.id)
     res.status(201).json({ received: true, eventId: ref.id })
     console.log("user id: ", userId)
-    sendAlertNotification(userId, {id: ref.id, ...event});
+    // sendAlertNotification(userId, {id: ref.id, ...event});
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
