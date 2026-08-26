@@ -1,5 +1,11 @@
 node_modules
+__pycache__/
+*.py[cod]
+.venv/
+venv/
 serviceAccountKey.json
 .env
 .env.development
 .env.production
+test_images/
+model/test_images/
