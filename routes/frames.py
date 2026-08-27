@@ -14,7 +14,7 @@ except ImportError:
     predict_image = None
 
 frames_bp = Blueprint("frames", __name__)
-REQUIRED_CONSECUTIVE_FALL_FRAMES = 8
+REQUIRED_CONSECUTIVE_FALL_FRAMES = 3
 
 _frame_states = {}
 _frame_states_lock = Lock()

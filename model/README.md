@@ -35,7 +35,7 @@ x-frame-timestamp: <epoch seconds or milliseconds>
 ```
 
 The server runs inference on each frame. A Firestore event is created after
-`8` consecutive frames are predicted as `Fall`. While the fall streak continues,
+`3` consecutive frames are predicted as `Fall`. While the fall streak continues,
 the server does not create duplicate events; a `No Fall` frame resets the alert.
 
 Install one TensorFlow Lite interpreter package before running inference:
