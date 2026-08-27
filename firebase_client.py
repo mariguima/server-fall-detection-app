@@ -2,7 +2,7 @@ import json
 import os
 
 import firebase_admin
-from firebase_admin import auth, credentials, firestore, messaging
+from firebase_admin import auth, credentials, firestore, messaging, storage
 
 
 def _initialize_firebase():
@@ -22,7 +22,12 @@ def _initialize_firebase():
             "FIREBASE_SERVICE_ACCOUNT or FIREBASE_SERVICE_ACCOUNT_PATH is required"
         )
 
-    firebase_admin.initialize_app(credentials.Certificate(credentials_dict))
+    options = {}
+    storage_bucket = os.getenv("FIREBASE_STORAGE_BUCKET")
+    if storage_bucket:
+        options["storageBucket"] = storage_bucket
+
+    firebase_admin.initialize_app(credentials.Certificate(credentials_dict), options)
 
 
 _initialize_firebase()

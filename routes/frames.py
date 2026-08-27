@@ -20,7 +20,13 @@ _frame_states = {}
 _frame_states_lock = Lock()
 
 
-def _update_frame_state(device_id, result, frame_sequence, frame_timestamp):
+def _update_frame_state(
+    device_id,
+    result,
+    frame_sequence,
+    frame_timestamp,
+    frame_image_bytes=None,
+):
     event_id = None
 
     with _frame_states_lock:
@@ -56,6 +62,8 @@ def _update_frame_state(device_id, result, frame_sequence, frame_timestamp):
                 source="frames",
                 frame_sequence=frame_sequence,
                 fall_score=result["fallScore"],
+                frame_image_bytes=frame_image_bytes,
+                frame_content_type="image/jpeg",
             )
             state["alertActive"] = True
 
@@ -76,9 +84,11 @@ def analyze_frame():
 
     try:
         if request.mimetype == "image/jpeg":
-            image = Image.open(BytesIO(request.get_data()))
+            frame_image_bytes = request.get_data()
+            image = Image.open(BytesIO(frame_image_bytes))
         elif "frame" in request.files:
-            image = Image.open(request.files["frame"].stream)
+            frame_image_bytes = request.files["frame"].read()
+            image = Image.open(BytesIO(frame_image_bytes))
         else:
             payload = request.get_json(silent=True) or {}
             result = predict(payload)
@@ -105,6 +115,7 @@ def analyze_frame():
             result,
             frame_sequence,
             frame_timestamp,
+            frame_image_bytes,
         )
 
         return jsonify({"result": result, "frameState": frame_state}), 200
